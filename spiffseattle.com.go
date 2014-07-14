@@ -9,11 +9,22 @@ func main() {
 	m := martini.Classic()
 	m.Get("/", Index)
 	m.Get("/cameron-bio", Bio)
+	m.Get("/faq", Faq)
+	m.Get("/contact", Contact)
 	m.Run()
 }
 
 type TemplateData struct {
 	Title string
+}
+
+// views provides a slice of views
+// that most of the resource handlers will end up loading
+func views() []string {
+	return []string{"views/head.gotmpl", 
+                    "views/nav.gotmpl",
+                    "views/footer.gotmpl",
+	                "views/bottom.gotmpl"}	
 }
 
 // get_templates accepts a slice of views files and return a concatenated string

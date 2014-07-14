@@ -6,9 +6,9 @@ import (
 	"log"
 )
 
-func Bio(w http.ResponseWriter) {
+func Contact(w http.ResponseWriter) {
 
-	my_views := append(views(), "views/bio.gotmpl")
+	my_views := append(views(), "views/contact.gotmpl")
 
 	views_txt, err := get_templates(my_views)
 	if err != nil {
@@ -17,8 +17,8 @@ func Bio(w http.ResponseWriter) {
 		return		
 	}
 
-	bio_data := &TemplateData{ Title: "Cameron's Bio" }
-	bio_tmpl, err := template.New("bio").Parse(string(views_txt))
+	contact_data := &TemplateData{ Title: "Contact" }
+	contact_tmpl, err := template.New("contact").Parse(string(views_txt))
 	if err != nil {
 	    log.Printf("Error parsing %s", views_txt)
 		log.Println(err.Error())
@@ -26,9 +26,9 @@ func Bio(w http.ResponseWriter) {
 		return
 	}
 
-	err = bio_tmpl.Execute(w, bio_data)
+	err = contact_tmpl.Execute(w, contact_data)
 	if err != nil {
-		log.Printf("Error rendering template %v", bio_data)
+		log.Printf("Error rendering template %v", contact_data)
 		log.Println(err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return

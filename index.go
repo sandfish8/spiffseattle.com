@@ -8,11 +8,9 @@ import (
 
 func Index(w http.ResponseWriter) {
 	
-	views := []string{"views/head.gotmpl", 
-	                  "views/nav.gotmpl",
-	                  "views/index.gotmpl"}
+	my_views := append(views(), "views/index.gotmpl")
 
-	views_txt, err := get_templates(views)
+	views_txt, err := get_templates(my_views)
 	if err != nil {
 		log.Println(err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
