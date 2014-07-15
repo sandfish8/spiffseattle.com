@@ -3,6 +3,10 @@ package main
 import (
 	"github.com/go-martini/martini"
 	"io/ioutil"
+	"net/http"
+	"html/template"
+	"log"
+	"fmt"
 )
 
 func main() {
@@ -25,6 +29,35 @@ func views() []string {
                     "views/nav.gotmpl",
                     "views/footer.gotmpl",
 	                "views/bottom.gotmpl"}	
+}
+
+func Bio(w http.ResponseWriter) {
+
+	name := "bio"
+	data := &TemplateData{ Title: "Cameron's Bio" }
+	my_views := append(views(), fmt.Sprintf("views/%s.gotmpl", name))
+
+	err := render(name, data, my_views, w) 
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)		
+	}
+}
+
+func render(name string, data *TemplateData, views []string, w http.ResponseWriter) error {
+	tmpl, err := template.ParseFiles(views...)
+	if err != nil {
+		log.Println("Error parsing template files")
+		log.Println(err)
+		return err
+	}
+
+	err = tmpl.ExecuteTemplate(w, name, data)
+	if err != nil {
+		log.Printf("Error rendering template %v", data)
+		log.Println(err.Error())
+		return err
+	}
+	return nil
 }
 
 // get_templates accepts a slice of views files and return a concatenated string
