@@ -1,12 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"github.com/go-martini/martini"
-	"io/ioutil"
-	"net/http"
 	"html/template"
 	"log"
-	"fmt"
+	"net/http"
 )
 
 func main() {
@@ -25,24 +24,61 @@ type TemplateData struct {
 // views provides a slice of views
 // that most of the resource handlers will end up loading
 func views() []string {
-	return []string{"views/head.gotmpl", 
-                    "views/nav.gotmpl",
-                    "views/footer.gotmpl",
-	                "views/bottom.gotmpl"}	
+	return []string{"views/head.gotmpl",
+		"views/nav.gotmpl",
+		"views/footer.gotmpl",
+		"views/bottom.gotmpl"}
+}
+
+func Index(w http.ResponseWriter) {
+
+	name := "index"
+	data := &TemplateData{Title: "Home"}
+	my_views := append(views(), fmt.Sprintf("views/%s.gotmpl", name))
+
+	err := render(name, data, my_views, w)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
 }
 
 func Bio(w http.ResponseWriter) {
 
 	name := "bio"
-	data := &TemplateData{ Title: "Cameron's Bio" }
+	data := &TemplateData{Title: "Cameron's Bio"}
 	my_views := append(views(), fmt.Sprintf("views/%s.gotmpl", name))
 
-	err := render(name, data, my_views, w) 
+	err := render(name, data, my_views, w)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)		
+		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
 
+func Faq(w http.ResponseWriter) {
+
+	name := "faq"
+	data := &TemplateData{Title: "FAQ"}
+	my_views := append(views(), fmt.Sprintf("views/%s.gotmpl", name))
+
+	err := render(name, data, my_views, w)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+}
+
+func Contact(w http.ResponseWriter) {
+
+	name := "contact"
+	data := &TemplateData{Title: "Contact"}
+	my_views := append(views(), fmt.Sprintf("views/%s.gotmpl", name))
+
+	err := render(name, data, my_views, w)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+}
+
+// render renders the template and writes the response to the http.ResponseWriter
 func render(name string, data *TemplateData, views []string, w http.ResponseWriter) error {
 	tmpl, err := template.ParseFiles(views...)
 	if err != nil {
@@ -59,23 +95,3 @@ func render(name string, data *TemplateData, views []string, w http.ResponseWrit
 	}
 	return nil
 }
-
-// get_templates accepts a slice of views files and return a concatenated string
-// of the content
-func get_templates(tmpls []string) ([]byte, error) {
-	tmpl_txt := []byte{}
-	for _, file := range tmpls {
-		txt, err := ioutil.ReadFile(file)
-		if err != nil {
-			return []byte{}, err
-		}		
-		tmpl_txt = append(tmpl_txt, txt...)
-	}
-	return tmpl_txt, nil
-}
-
-
-
-
-
-
